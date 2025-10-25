@@ -3,9 +3,9 @@ from sklearn.model_selection import train_test_split
 
 
 def classify_iris(sl, sw, pl, pw):
-    if sl > 4:
+    if pw < 1:
         return("Setosa")
-    elif pl <= 5:
+    elif pl >= 5:
         return("Virginica")
     else:
         return("Versicolor")
@@ -24,7 +24,7 @@ len = test_set.shape[0]
 
 for i in range(len):
     if classify_iris(test_inputs[i][0], test_inputs[i][1],
-                     test_inputs[i][2], test_inputs[i][3]) == test_classes[i]:
+                     test_inputs[i][2], test_inputs[i][3]).casefold() == test_classes[i].casefold():
         good_predictions += 1
 
 print(good_predictions)

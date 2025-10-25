@@ -29,11 +29,9 @@ g = 10
 
 shoot = lambda alpha : V0 * cos(alpha) * ((V0 * sin(alpha) + sqrt((V0 * sin(alpha))**2 + 2 * g * h))/g)
 
-print(shoot(45))
-
 target = randint(50, 340)
 
-print(f"You're trying to shoot target {target}m away")
+print(f"You're trying to shoot target {target:.2f}m away")
 
 target_hit = False
 counter = 0
@@ -48,4 +46,4 @@ while not target_hit:
         draw_trajectory(aim, V0, h, g)
 
     else:
-        print(f"You missed, Your shot landed at {shot}m")
+        print(f"You missed, Your shot landed at {shot:.2f}m")

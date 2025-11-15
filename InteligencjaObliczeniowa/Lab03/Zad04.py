@@ -1,4 +1,5 @@
 import pandas as pd
+from matplotlib import pyplot as plt
 from sklearn.metrics import confusion_matrix, accuracy_score
 from sklearn.model_selection import train_test_split
 from sklearn.naive_bayes import GaussianNB
@@ -62,7 +63,7 @@ tree = DecisionTreeClassifier(
 )
 
 tree.fit(train_inputs, train_classes)
-
+tree_accuracy = tree.score(test_inputs, test_classes)
 print(f"Accuracy: {tree.score(test_inputs, test_classes):.2f}")
 
 cm = confusion_matrix(test_classes, tree.predict(test_inputs), labels=tree.classes_)
@@ -71,7 +72,7 @@ print(cm)
 
 knn3 = KNeighborsClassifier(n_neighbors = 3)
 knn3.fit(train_inputs, train_classes)
-
+knn3_accuracy = knn3.score(test_inputs, test_classes)
 print(f"Accuracy: {knn3.score(test_inputs, test_classes):.2f}")
 
 cm_knn3 = confusion_matrix(test_classes, knn3.predict(test_inputs), labels=knn3.classes_)
@@ -80,7 +81,7 @@ print(cm_knn3)
 
 knn5 = KNeighborsClassifier(n_neighbors = 5)
 knn5.fit(train_inputs, train_classes)
-
+knn5_accuracy = knn5.score(test_inputs, test_classes)
 print(f"Accuracy: {knn5.score(test_inputs, test_classes):.2f}")
 
 cm_knn5 = confusion_matrix(test_classes, knn5.predict(test_inputs), labels=knn5.classes_)
@@ -89,7 +90,7 @@ print(cm_knn5)
 
 knn11 = KNeighborsClassifier(n_neighbors = 11)
 knn11.fit(train_inputs, train_classes)
-
+knn11_accuracy = knn11.score(test_inputs, test_classes)
 print(f"Accuracy: {knn11.score(test_inputs, test_classes):.2f}")
 
 cm_knn11 = confusion_matrix(test_classes, knn11.predict(test_inputs), labels=knn11.classes_)
@@ -99,6 +100,7 @@ print(cm_knn11)
 nb = GaussianNB()
 
 nb.fit(train_inputs, train_classes)
+nb_accuracy = nb.score(test_inputs, test_classes)
 print(f"Accuracy: {nb.score(test_inputs, test_classes):.2f}")
 cm_nb = confusion_matrix(test_classes, nb.predict(test_inputs), labels=nb.classes_)
 
@@ -115,6 +117,7 @@ mlp4_2_1.fit(train_inputs, train_classes)
 prediction = mlp4_2_1.predict(test_inputs)
 print("4-2-1")
 print(mlp4_2_1.n_iter_)
+mlp_4_2_1_accuracy = accuracy_score(test_classes, prediction)
 print(f"Accuracy: {accuracy_score(test_classes, prediction)}")
 print(f"Confusion Matrix:\n{confusion_matrix(test_classes, prediction)}")
 
@@ -124,6 +127,7 @@ mlp4_3_1.fit(train_inputs, train_classes)
 prediction = mlp4_3_1.predict(test_inputs)
 print("4-3-1")
 print(mlp4_3_1.n_iter_)
+mlp_4_3_1_accuracy = accuracy_score(test_classes, prediction)
 print(f"Accuracy: {accuracy_score(test_classes, prediction)}")
 print(f"Confusion Matrix:\n{confusion_matrix(test_classes, prediction)}")
 
@@ -133,5 +137,17 @@ mlp4_2_2_1.fit(train_inputs, train_classes)
 prediction = mlp4_2_2_1.predict(test_inputs)
 print("4-2-2-1")
 print(mlp4_2_2_1.n_iter_)
+mlp_4_2_2_1_accuracy = accuracy_score(test_classes, prediction)
 print(f"Accuracy: {accuracy_score(test_classes, prediction)}")
 print(f"Confusion Matrix:\n{confusion_matrix(test_classes, prediction)}")
+
+values = [tree_accuracy, knn3_accuracy, knn5_accuracy, knn11_accuracy, nb_accuracy, mlp_4_2_1_accuracy, mlp_4_3_1_accuracy, mlp_4_2_2_1_accuracy]
+labels = ["Decision Tree", "KNN3", "KNN5", "KNN11", "Gauss", "4_2_1", "4_3_1", "4_2_2_1"]
+
+plt.bar(labels, values)
+plt.ylim(0, 1)
+for i, v in enumerate(values):
+    plt.text(i, v + 0.01, f"{round(v * 100, 2)}%", ha="center")
+plt.xticks(rotation=45)
+plt.tight_layout()
+plt.show()

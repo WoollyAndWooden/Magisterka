@@ -2,3 +2,6 @@ numpy
 matplotlib
 pandas
 scikit-learn
+tensorflow[and-cuda]
+opencv-python
+ultralytics

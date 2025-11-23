@@ -14,14 +14,12 @@ def iterate_images(folder_path = "bird_miniatures"):
         clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8, 8))
         enhanced = clahe.apply(gray)
 
-        img_eq = cv2.equalizeHist(gray)
-
         blur = cv2.GaussianBlur(enhanced, (5, 5), 0)
 
         thresh = cv2.adaptiveThreshold(blur, 255,
                                        cv2.ADAPTIVE_THRESH_MEAN_C,
                                        cv2.THRESH_BINARY_INV,
-                                       blockSize=5, C=2)
+                                       blockSize=7, C=2)
 
         kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (2, 2))
         clean = cv2.morphologyEx(thresh, cv2.MORPH_OPEN, kernel)
@@ -36,7 +34,10 @@ def iterate_images(folder_path = "bird_miniatures"):
 
         cv2.drawContours(output, small_blobs, -1, (0, 0, 255), 1)
 
-        cv2.imshow("Detected blobs", output)
+        #cv2.imshow("Detected blobs", output)
+        out_path = os.path.join(folder_path, f"detected_{len(small_blobs)}_{filename}")
+        print(out_path)
+        cv2.imwrite(out_path, output)
         cv2.waitKey(0)
         cv2.destroyAllWindows()
 

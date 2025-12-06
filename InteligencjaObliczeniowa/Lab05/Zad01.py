@@ -1,3 +1,5 @@
+import time
+
 import numpy as np
 from pygad import GA
 
@@ -41,21 +43,35 @@ ga_instance = GA(
     num_genes=len(Ikeys),
     gene_space=[0, 1],
     gene_type=int,
-    parent_selection_type="rws",
+    parent_selection_type="rank",
     crossover_type="uniform",
     mutation_type="random",
     mutation_percent_genes=10
 )
 
-ga_instance.run()
 
-solution, solution_fitness, solution_idx = ga_instance.best_solution()
-best_selection_indices = np.where(solution ==1)[0]
-best_items= [Ikeys[i] for i in best_selection_indices]
+def run_experiment():
+    start_time = time.time()
+    ga_instance.run()
+    end_time = time.time()
+    solution, solution_fitness, solution_idx = ga_instance.best_solution()
+    best_selection_indices = np.where(solution == 1)[0]
+    best_items = [Ikeys[i] for i in best_selection_indices]
+    total_weight = np.sum(solution * weights)
+    return best_items, solution_fitness, total_weight, end_time - start_time
 
-total_weight = np.sum(solution * weights)
 
-print("\n--- Genetic Algorithm Results ---")
-print(f"✅ Items Selected: {best_items}")
-print(f"💰 Total Value: {solution_fitness}")
-print(f"⚖️ Total Weight: {total_weight} / {25} (Capacity)")
+result = [run_experiment() for _ in range(10)]
+average_time = sum(res[3] for res in result)/len(result)
+
+
+filename = "Zad01results.txt"
+with open(filename, "w") as f:
+    f.write("Results:\n")
+    for i, (best_items, solution_fitness, total_weight, exec_time) in enumerate(result):
+        f.write(f"{i+1}:\n")
+        f.write(f"Items Selected: {best_items}\n")
+        f.write(f"Total Value: {solution_fitness}\n")
+        f.write(f"Total Weight: {total_weight} / {25} (Capacity)\n")
+        f.write(f"Execution Time: {exec_time:.2f}s\n\n")
+    f.write(f"Average Time: {average_time:.2f}s\n")
